@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAMES DESENVOLVER - Ferramentas para Game Devs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        
+        :root {
+            --main-bg-color: #0a0a0a;
+            --primary-color: #00ff00;
+            --secondary-color: #00cc00;
+            --text-color: #f0f0f0;
+            --accent-color: #222222;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: var(--main-bg-color);
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 0, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 60%, rgba(0, 255, 0, 0.03) 0%, transparent 20%);
+        }
+        
+        header {
+            background-color: rgba(10, 10, 10, 0.95);
+            padding: 1rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--primary-color);
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            letter-spacing: 2px;
+        }
+        
+        .logo span {
+            color: var(--text-color);
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 1.5rem;
+        }
+        
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-color);
+            transition: width 0.3s;
+        }
+        
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+        
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-login {
+            background-color: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-login:hover {
+            background-color: var(--primary-color);
+            color: var(--main-bg-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        .btn-register {
+            background-color: var(--primary-color);
+            color: var(--main-bg-color);
+        }
+        
+        .btn-register:hover {
+            background-color: var(--secondary-color);
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+        
+        .hero {
+            padding: 4rem 1rem;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.9), rgba(10, 10, 10, 0.7)), url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%230a0a0a"/><path d="M0 0L100 100" stroke="%23003300" stroke-width="0.5"/><path d="M100 0L0 100" stroke="%23003300" stroke-width="0.5"/></svg>');
+            background-size: cover;
+        }
+        
+        .hero h2 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 15px rgba(0, 255, 0, 0.7);
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: var(--primary-color);
+            text-align: center;
+            position: relative;
+            padding-bottom: 0.5rem;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background-color: var(--primary-color);
+        }
+        
+        .tools-grid, .tutorials-grid, .kits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .card {
+            background-color: var(--accent-color);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0, 255, 0, 0.1);
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        
+        .card-img {
+            height: 180px;
+            background-color: #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 3rem;
+        }
+        
+        .card-content {
+            padding: 1.5rem;
+        }
+        
+        .card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+        
+        .card p {
+            margin-bottom: 1rem;
+            color: #ccc;
+        }
+        
+        .card-btn {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background-color: var(--primary-color);
+            color: var(--main-bg-color);
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .card-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .video-container {
+            position: relative;
+            padding-bottom: 56.25%;
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .credits {
+            background-color: var(--accent-color);
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+            border-top: 1px solid var(--primary-color);
+        }
+        
+        .credits h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        
+        .credits-list {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        
+        .credit-item {
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid rgba(0, 255, 0, 0.2);
+        }
+        
+        .login-modal, .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background-color: var(--accent-color);
+            padding: 2rem;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            border: 1px solid var(--primary-color);
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .modal-header h2 {
+            color: var(--primary-color);
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            color: var(--text-color);
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+        
+        .modal-btn {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--primary-color);
+            color: var(--main-bg-color);
+            border: none;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .modal-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .admin-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+        }
+        
+        .admin-btn {
+            background-color: var(--primary-color);
+            color: var(--main-bg-color);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+            font-size: 1.5rem;
+        }
+        
+        footer {
+            background-color: var(--accent-color);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--primary-color);
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .tools-grid, .tutorials-grid, .kits-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <h1>GAMES <span>DESENVOLVER</span></h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#ferramentas">Ferramentas</a></li>
+                    <li><a href="#tutoriais">Tutoriais</a></li>
+                    <li><a href="#kits">Kits Prontos</a></li>
+                    <li><a href="#creditos">Creditos</a></li>
+                </ul>
+            </nav>
+            <div class="auth-buttons">
+                <button class="btn btn-login" id="loginBtn">Login</button>
+                <button class="btn btn-register">Registrar</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h2>Recursos Gratuitos para Desenvolvedores de Jogos</h2>
+            <p>Encontre tudo que você precisa para criar jogos incríveis: ferramentas, tutoriais em vídeo e assets prontos para usar em seus projetos.</p>
+        </div>
+    </section>
+
+    <section id="ferramentas" class="container">
+        <h2 class="section-title">Ferramentas Gratuitas</h2>
+        <div class="tools-grid">
+            <div class="card">
+                <div class="card-img">🛠️</div>
+                <div class="card-content">
+                    <h3>Unity Engine</h3>
+                    <p>Motor de jogo poderoso para criação de jogos 2D e 3D.</p>
+                    <a href="#" class="card-btn">Baixar</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">🎨</div>
+                <div class="card-content">
+                    <h3>GIMP</h3>
+                    <p>Editor de imagens gratuito para criação de texturas e sprites.</p>
+                    <a href="#" class="card-btn">Baixar</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">🔊</div>
+                <div class="card-content">
+                    <h3>BFXR</h3>
+                    <p>Gerador de efeitos sonoros para jogos retro.</p>
+                    <a href="#" class="card-btn">Usar Online</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="tutoriais" class="container">
+        <h2 class="section-title">Tutoriais em Vídeo</h2>
+        <div class="tutorials-grid">
+            <div class="card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/EJ7BECaFBaQ" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3>Como Criar seu Primeiro Jogo</h3>
+                    <p>Aprenda os conceitos básicos de desenvolvimento de jogos.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/8gLV6FSi6cI" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3>Programação para Jogos</h3>
+                    <p>Introdução à programação com C# para Unity.</p>
+                </div>
+            </div>
+            <div class="card">
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/ziZ8X_iY-Ec" allowfullscreen></iframe>
+                </div>
+                <div class="card-content">
+                    <h3>Design de Personagens</h3>
+                    <p>Crie personagens memoráveis para seus jogos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="kits" class="container">
+        <h2 class="section-title">Kits Prontos</h2>
+        <div class="kits-grid">
+            <div class="card">
+                <div class="card-img">🎮</div>
+                <div class="card-content">
+                    <h3>Pixel Art Pack</h3>
+                    <p>Mais de 100 sprites em pixel art para jogos 2D.</p>
+                    <a href="#" class="card-btn">Download</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">🔊</div>
+                <div class="card-content">
+                    <h3>SFX Collection</h3>
+                    <p>Efeitos sonoros gratuitos para diversos tipos de jogos.</p>
+                    <a href="#" class="card-btn">Download</a>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-img">🔄</div>
+                <div class="card-content">
+                    <h3>Modelos 3D</h3>
+                    <p>Personagens e objetos 3D prontos para usar em seus projetos.</p>
+                    <a href="#" class="card-btn">Download</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="creditos" class="credits">
+        <div class="container">
+            <h3>Creditos</h3>
+            <div class="credits-list">
+                <div class="credit-item">Breno</div>
+                <div class="credit-item">Vinicius</div>
+                <div class="credit-item">Enzo</div>
+                <div class="credit-item">Davi Tasca</div>
+                <div class="credit-item">Davi Reis</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="loginModal" class="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login Desenvolvedor</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="modal-btn">Entrar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="adminModal" class="admin-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Painel Administrativo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <form id="adminForm">
+                <div class="form-group">
+                    <label for="editContent">Editar Conteúdo</label>
+                    <input type="text" id="editContent" placeholder="Digite o novo conteúdo">
+                </div>
+                <div class="form-group">
+                    <label for="section">Seção</label>
+                    <input type="text" id="section" placeholder="Seção a editar">
+                </div>
+                <button type="submit" class="modal-btn">Aplicar Alterações</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="admin-panel">
+        <button class="admin-btn" id="adminBtn">⚙️</button>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>GAMES DESENVOLVER &copy; 2025 - Todos os direitos reservados</p>
+            <p>URL: games-desenvolver</p>
+        </div>
+    </footer>
+
+    <script>
+        // Modal de Login
+        const loginBtn = document.getElementById('loginBtn');
+        const loginModal = document.getElementById('loginModal');
+        const adminBtn = document.getElementById('adminBtn');
+        const adminModal = document.getElementById('adminModal');
+        const closeModalButtons = document.querySelectorAll('.close-modal');
+        
+        loginBtn.addEventListener('click', () => {
+            loginModal.style.display = 'flex';
+        });
+        
+        adminBtn.addEventListener('click', () => {
+            adminModal.style.display = 'flex';
+        });
+        
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                loginModal.style.display = 'none';
+                adminModal.style.display = 'none';
+            });
+        });
+        
+        window.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.style.display = 'none';
+            }
+            if (e.target === adminModal) {
+                adminModal.style.display = 'none';
+            }
+        });
+        
+        // Form submission
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Login realizado com sucesso!');
+            loginModal.style.display = 'none';
+        });
+        
+        document.getElementById('adminForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Alterações aplicadas!');
+            adminModal.style.display = 'none';
+        });
+    </script>
+</body>
+</html>
